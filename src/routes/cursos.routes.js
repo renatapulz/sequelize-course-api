@@ -5,5 +5,6 @@ const cursosRoutes = new Router()
 
 cursosRoutes.post('/', (req, res) => CursosController.create(req, res));
 cursosRoutes.get('/', (req, res) => CursosController.getAll(req, res));
+cursosRoutes.put('/:id', (req, res) => CursosController.update(req, res));
 
 module.exports = cursosRoutes

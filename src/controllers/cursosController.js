@@ -33,7 +33,8 @@ class CursosController {
 
             const cursos = await Curso.findAll({
                 attributes: ['id', 'nome', 'duracao'],
-                where: consultaDados
+                where: consultaDados,
+                order: [['id', 'ASC']]
             });
 
             if (!cursos || cursos.length === 0) {
@@ -47,6 +48,30 @@ class CursosController {
             console.error('Erro ao listar o(s) curso(s):', error);
             return res.status(500).json({
                 mensagem: 'Não foi possível listar o(s) curso(s).'
+            });
+        }
+    }
+
+    async update(req, res) {
+        try {
+            const { id } = req.params;
+            const dados = req.body;
+
+            // Verifico se o curso existe
+            const curso = await Curso.findByPk(id);
+
+            if (!curso) {
+                return res.status(404).json({
+                    mensagem: 'Curso não encontrado.'
+                });
+            }
+
+            await curso.update(dados);
+            res.json(curso);
+        } catch (error) {
+            console.error('Erro ao atualizar o curso:', error);
+            res.status(500).json({
+                mensagem: 'Erro ao atualizar o curso.'
             });
         }
     }
