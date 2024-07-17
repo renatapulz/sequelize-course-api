@@ -20,21 +20,33 @@ class CursosController {
 
     async getAll(req, res) {
         try {
-            const dados = await Curso.findAll({
-                attributes: ['id', 'nome', 'duracao']
+            const { nome, duracao } = req.query;
+            let consultaDados = {};
+
+            if (nome) {
+                consultaDados.nome = nome;
+            }
+
+            if (duracao) {
+                consultaDados.duracao = duracao;
+            }
+
+            const cursos = await Curso.findAll({
+                attributes: ['id', 'nome', 'duracao'],
+                where: consultaDados
             });
 
-            if (!dados) {
+            if (!cursos || cursos.length === 0) {
                 return res.status(404).json({
-                    mensagem: 'Nenhum curso encontrado'
+                    mensagem: 'Nenhum curso foi encontrado.'
                 });
             }
 
-            return res.json(dados);
+            return res.json(cursos);
         } catch (error) {
-            console.error('Erro ao listar cursos:', error);
+            console.error('Erro ao listar o(s) curso(s):', error);
             return res.status(500).json({
-                mensagem: 'Não foi possível listar os cursos'
+                mensagem: 'Não foi possível listar o(s) curso(s).'
             });
         }
     }
