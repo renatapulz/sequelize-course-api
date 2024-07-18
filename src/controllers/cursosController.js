@@ -75,6 +75,28 @@ class CursosController {
             });
         }
     }
+
+    async delete(req, res) {
+        try {
+            const { id } = req.params;
+            const curso = await Curso.findByPk(id);
+
+            if (!curso) {
+                return res.status(404).json({
+                    mensagem: 'Curso não encontrado.'
+                });
+            }
+
+            await curso.destroy();
+
+            return res.status(204).send();
+        } catch (error) {
+            console.error('Erro ao excluir o curso:', error);
+            return res.status(500).json({
+                mensagem: 'Erro ao excluir o curso.'
+            });
+        }
+    }
 }
 
 module.exports = new CursosController()
